@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Prepare .env
+        run: cp app/core/.env.example app/core/.env
+
+      - name: Build dev image
+        run: docker compose build test
+
+      - name: Ruff check
+        run: docker compose run --rm --no-deps test uv run ruff check
+
+      - name: Ruff format check
+        run: docker compose run --rm --no-deps test uv run ruff format --check
+
+      - name: Tests
+        run: docker compose run --rm test
+
+      - name: Build prod image
+        run: docker build --target prod -f app/Dockerfile -t test-assignment-simple-solutions:prod .

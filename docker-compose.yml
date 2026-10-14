@@ -1,0 +1,33 @@
+x-app-common: &app-common
+  build:
+    context: .
+    dockerfile: app/Dockerfile
+    target: dev
+  volumes:
+    - ./app:/usr/src/app
+    - ./tests:/usr/src/tests
+    - ./pyproject.toml:/usr/src/pyproject.toml
+    - ./uv.lock:/usr/src/uv.lock
+
+services:
+
+  web:
+    container_name: web
+    <<: *app-common
+    env_file:
+      - ./app/core/.env
+    ports:
+      - 127.0.0.1:8000:8000
+    environment:
+      - PYTHONPATH=/usr/src
+
+  test:
+    container_name: test
+    <<: *app-common
+    command: uv run pytest
+    env_file:
+      - ./app/core/.env
+    environment:
+      - PYTHONPATH=/usr/src
+    profiles:
+      - test

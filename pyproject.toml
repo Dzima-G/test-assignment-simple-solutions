@@ -1,6 +1,7 @@
 [project]
 name = "test-assignment-simple-solutions"
 version = "0.1.0"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiohttp>=3.14.5",
@@ -11,4 +12,78 @@ dependencies = [
     "pydantic-settings>=2.15.0",
     "sqlalchemy[asyncio]>=2.1.4",
     "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.1",
+    "pre-commit>=4.7.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.17.0",
+]
+
+[tool.ruff]
+
+line-length = 120
+
+target-version = "py312"
+
+[tool.ruff.lint.pylint]
+max-args = 6 # Максимальное кол-во аргументов функции
+max-branches = 10 # Максимальное кол-во ветвей if/else
+max-statements = 50 # Максимальное кол-во операторов в функции
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]
+"**/env.py" = ["F401"]
+"**/test*.py" = ["PLR2004", "PLR0913", "PLR0915", "C901"]
+
+[tool.ruff.lint]
+preview = true
+select = [
+    "A",
+    "B",
+    "C4",
+    "E",
+    "F",
+    "I",
+    "W",
+    "UP",
+    "PL",
+    "RET"
+]
+fixable = [
+    "E",
+    "F401",
+    "I",
+    "W"
+]
+unfixable = [
+    "A",
+    "B",
+    "C4", "PL",
+    "RET",
+    "UP"
+]
+ignore = [
+    "RET501",
+    "RET504",
+    "B904",
+    "UP031",
+    "PLR6301",
+    "PLC0415",
+    "B008",
+]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--tb=short",
 ]

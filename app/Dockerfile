@@ -1,0 +1,21 @@
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS base
+
+WORKDIR /usr/src
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+COPY pyproject.toml uv.lock ./
+
+FROM base AS dev
+
+RUN uv sync --locked
+CMD ["uv", "run", "uvicorn", "app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+FROM base AS prod
+
+ENV UV_NO_DEV=1
+
+RUN uv sync --locked --no-dev
+COPY app app
+CMD ["uv", "run", "uvicorn", "app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
