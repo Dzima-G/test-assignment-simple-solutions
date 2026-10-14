@@ -1,0 +1,20 @@
+# Байт-код и кэш
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Виртуальные окружения
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Переменные окружения
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE
+.idea/
